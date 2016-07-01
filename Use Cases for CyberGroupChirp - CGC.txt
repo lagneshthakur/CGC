@@ -15,6 +15,6 @@ As a user,
 	I should be able to see a list of users I am following
 	I should be able to see a list of users following me
 	I must be able to put a post on my profile
-	I should get updates about the posts of users that I am following
+	I should get updates about the posts of users who I am following
 	It would be good to have an option for image or video updates
 	It would be good to have an option to like a post
