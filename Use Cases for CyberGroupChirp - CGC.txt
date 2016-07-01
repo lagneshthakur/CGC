@@ -1,0 +1,20 @@
+Use Cases for CyberGroupChirp - CGC
+
+As a user,
+	I must be able to sign-up using a username and password
+	It would be good to have social sign-up option
+	I must receive a email for successful registration
+	I must be able to login to my account using correct username and password
+	It would be good to have social sign-in option
+	I should be able to recover my password if lost
+	I must be able to view my profile
+	I should be able to edit my profile
+	I must be able to search for other users
+	I must be able to see other users' profile
+	I must be able to follow other users
+	I should be able to see a list of users I am following
+	I should be able to see a list of users following me
+	I must be able to put a post on my profile
+	I should get updates about the posts of users that I am following
+	It would be good to have an option for image or video updates
+	It would be good to have an option to like a post
