@@ -4,13 +4,26 @@
 	<title>Contact List App</title>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="public/css/style.css">
+	<script type="text/javascript" src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+	<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		var socket = io();
+		function sendMessage(){
+			socket.emit('chat message', $('#m').val());
+			$('#m').val('');
+			return false;
+		};
+		socket.on('chat message', function(msg){
+		    $('#messages').append($('<li>').text(msg));
+	  	});
+	</script>
 </head>
 <body>
 	<div class="container" ng-controller="AppCtrl">
-		<h1>Contact List Application</h1>
+		<h1>Node CRUD + Socket Application</h1>
 		<table class="table">
 			<thead>
 				<tr>
@@ -39,7 +52,14 @@
 			</tbody>
 		</table>
 	</div>
+	<div ng-controller="ChatCtrl">
+		<ul id="messages"></ul>
+	    <form action="">
+	      <input id="m" autocomplete="off" />
+	      <button onclick="sendMessage(); return false;" >Send</button>
+	    </form>
+	</div>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-	<script type="text/javascript" src="controllers/controller.js"></script>
+	<script type="text/javascript" src="public/controllers/controller.js"></script>
 </body>
 </html>

@@ -5,9 +5,18 @@ var db = mongojs('contactlist',['contacts']);
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var fs = require('fs');
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+
+
 mongoose.connect('mongodb://localhost:27017/contactlist');
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/"));
+
+app.get('/', function(req, res){
+  res.sendfile('public/index.html');
+});
+
 app.use(bodyParser.json());
 
 //Load models
@@ -18,6 +27,7 @@ fs.readdirSync(__dirname + '/public/models').forEach(function(filename){
 
 var contacts = mongoose.model('contacts');
 
+// The CRUD requests are handled here
 app.get('/contactlist',function(req,res){
 	console.log("I received a get request");
 	contacts.find(function(err,docs){
@@ -58,5 +68,19 @@ app.put('/contactlist/:id',function(req,res){
 			res.json(doc);
 		});
 });
-app.listen(3000);
+
+//Socket.io Starts from here
+io.on('connection', function(socket){
+  console.log('A user connected');
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
+    io.emit('chat message', msg);
+  });
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+
+
+http.listen(3000);
 console.log("Server running on port 3000");

@@ -41,3 +41,7 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
 		})
 	};
 }]);
+
+myApp.controller('ChatCtrl', ['$scope', function ($scope) {
+	
+}])
