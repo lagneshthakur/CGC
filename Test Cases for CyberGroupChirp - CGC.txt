@@ -1,7 +1,7 @@
 Test Cases for CyberGroupChirp - CGC
 
 Scenario - Following other users
-	Test Case 1
+	Test Case 1 - done
 		Aim : Check response on following a user
 		Pre-conditions : 
 		Test Steps : hit the follow api (post) with the id of current user and the user to be followed
@@ -10,7 +10,7 @@ Scenario - Following other users
 		Expected Result : The followed user should be added to the 'following' array of current user
 		Actual Result :
 
-	Test Case 2
+	Test Case 2 - done
 		Aim : Check response on unfollowing a user
 		Pre-conditions : 
 		Test Steps : hit the follow api (delete) with the id of current user and the user to be followed
@@ -27,7 +27,7 @@ Scenario - Following other users
 		Expected Result : A JSON array of list of users should be returned
 		Actual Result :
 
-	Test Case 4
+	Test Case 4 - 
 		Aim : Get list of users that the current user is following
 		Pre-conditions : 
 		Test Steps : hit the get_followers (get) api with the id of current user
