@@ -19,7 +19,7 @@ Scenario - Following other users
 		Expected Result : The followed user should be removed from the 'following' array of current user
 		Actual Result :
 
-	Test Case 3
+	Test Case 3 - done
 		Aim : Get list of users that are following current user
 		Pre-conditions : 
 		Test Steps : hit the get_following (get) api with the id of current user
@@ -27,10 +27,21 @@ Scenario - Following other users
 		Expected Result : A JSON array of list of users should be returned
 		Actual Result :
 
-	Test Case 4 - 
+	Test Case 4 - done
 		Aim : Get list of users that the current user is following
 		Pre-conditions : 
 		Test Steps : hit the get_followers (get) api with the id of current user
 		Test Data : _id:577ca713bd1fa54e5372a3ca
 		Expected Result : A JSON array of list of users should be returned
 		Actual Result :
+
+Scenario - Handling Posts
+	Test Case 1 
+		Aim : To create a new post.
+		Pre-conditions :
+		Test Steps : hit the create_post api with the id of current user
+		Test Data : _id:577ca713bd1fa54e5372a3ca
+		Expected Result : A post should be created for the current user
+		Actual Result :
+
+	Test Case 2

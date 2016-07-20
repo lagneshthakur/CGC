@@ -12,6 +12,7 @@ As a user,
 	I must be able to search for other users
 	I must be able to see other users' profile
 *	I must be able to follow other users
+*	I must be able to unfollow other users
 *	I should be able to see a list of users I am following
 *	I should be able to see a list of users following me
 **	I must be able to put a post on my profile
