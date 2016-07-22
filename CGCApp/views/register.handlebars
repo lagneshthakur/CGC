@@ -1,1 +1,33 @@
-REGISTER
+<h2 class="page-header">Register</h2>
+{{#if errors}}
+	{{#each errors}}
+		<div class="alert alert-danger"><i class="icon-remove-sign icon large"></i>{{msg}}</div>
+	{{/each}}
+{{/if}}
+<form method="post" action="/user/register">
+   <div class="form-group">
+    <label>First Name</label>
+    <input type="text" class="form-control" placeholder="FirstName" name="firstname">
+  </div>
+  <div class="form-group">
+    <label>Last Name</label>
+    <input type="text" class="form-control" placeholder="LastName" name="lastname">
+  </div>
+   <div class="form-group">
+    <label>Email</label>
+    <input type="email" class="form-control" placeholder="Email" name="email">
+  </div>
+  <div class="form-group">
+    <label>Date of Birth</label>
+    <input type="date" class="form-control" placeholder="" name="dob">
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" class="form-control" placeholder="Password" name="password">
+  </div>
+  <div class="form-group">
+    <label>Confirm Password</label>
+    <input type="password" class="form-control" placeholder="Password" name="password2">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>

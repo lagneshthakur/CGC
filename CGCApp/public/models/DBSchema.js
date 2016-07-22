@@ -1,13 +1,15 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
-DBSchema = {
+var DBSchema = {
 	users:{
 		name: {
 		  first: { type: String, required: true},
 		  last: { type: String, required: true}
 		},
-		email: { type: String, required: true, unique: true},
+		email: { type: String, required: true, unique: true, index:true},
+		password: { type: String },
+		dob: {type:Date},
 		following: [{
 			id: {type: ObjectId, required:true, unique: true},
 			name: {
