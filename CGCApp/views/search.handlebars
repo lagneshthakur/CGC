@@ -1,0 +1,53 @@
+<h2 class="page-header">Search</h2>
+<form method="post" action="/user/search">
+  <div class="form-group">
+    <label>Email</label>
+    <input type="text" class="form-control" name="email" placeholder="Email">
+  </div>
+  <button type="submit" class="btn btn-default">Search</button>
+</form>
+<br>
+{{#if search_user}}
+<div class="container">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{search_user.name.first}} {{search_user.name.last}}</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img style="height: 100px;width: 100px;" src="" alt="User Pic" class="img-circle img-responsive"> </div>
+                <div class=" col-md-9 col-lg-9 "> 
+                  <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>Date Of Birth:</td>
+                        <td>{{dob}}</td>
+                      </tr>
+                      <tr>
+                        <td>Email:</td>
+                        <td>{{search_user.email}}</td>
+                      </tr>
+                      <tr>
+                        <td>Followers:</td>
+                        <td>{{search_user.follower.length}}</td>
+                      </tr>                     
+                    </tbody>
+                  </table>
+                  <a href="#" class="btn btn-primary">Follow</a>
+                  <!-- <a href="#" class="btn btn-primary">Team Sales Performance</a> -->
+                </div>
+              </div>
+            </div>
+<!--                  <div class="panel-footer">
+                        <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+                        <span class="pull-right">
+                            <a href="edit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                        </span>
+                    </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+{{/if}}

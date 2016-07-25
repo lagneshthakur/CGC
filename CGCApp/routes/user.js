@@ -94,6 +94,33 @@ router.get('/logout',function(req,res){
 	req.flash('success_msg',"You are logged out.");
 	res.redirect('/user/login');
 });
+
+// Search for a user
+
+router.get('/search', ensureAuthenticated,function(req,res){
+	res.render('search',{search_user:null});
+});
+
+router.post('/search',function(req,res){
+	var email = req.body.email;
+	User.getUserByEmail(email, function(err,user){
+  		if(err) throw err;
+  		if(!user){
+  			req.flash('error_msg',"No user with that Email");
+  			res.redirect('/user/search');
+  		}
+  		else{
+  			var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  			date = new Date(user.dob);
+			dob = date.getFullYear()+'-' + (months[date.getMonth()]) + '-'+date.getDate();
+  			req.flash('success_msg',"User Found");
+  			res.locals.success_msg = req.flash('success_msg');
+  			res.render('search',{search_user:user, dob: dob});
+  		}
+  	});
+
+});
+
 //Follow a user
 router.post('/follow',function(req,res){
 	console.log("I received a post request on follow");
@@ -181,4 +208,13 @@ router.get('/follower/:id',function(req,res){
 	})
 });
 
+function ensureAuthenticated(req,res,next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	else{
+		// req.flash("error_msg","You are not logged in.");
+		res.redirect('/user/login');
+	}
+}
 module.exports = router;
