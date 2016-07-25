@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var User = require('../public/models/user.js');	
+var mongoose = require('mongoose');
 
 // Register A user
 router.get('/register',function(req,res){
@@ -53,6 +54,8 @@ router.get('/login',function(req,res){
 
 passport.use(new LocalStrategy(
   function(email, password, done) {
+  	console.log("Login Request Received");
+  	console.log("Email:",email);
   	User.getUserByEmail(email, function(err,user){
   		if(err) throw err;
   		if(!user){
@@ -124,6 +127,7 @@ router.post('/search',function(req,res){
 //Follow a user
 router.post('/follow',function(req,res){
 	console.log("I received a post request on follow");
+	console.log(req.body);
 	// Add follower to the user who is to be followed by current user
 	User.findOne({ _id:req.body.id},function(err,doc){
 		User.update({_id: req.body.user_id}, {
@@ -185,24 +189,32 @@ router.delete('/follow',function(req,res){
 });
 
 // Get a list of users I am following
-router.get('/following/:id',function(req,res){
+router.get('/following',function(req,res){
 	console.log("Get request on following");
-	User.findById(req.params.id,function(err,user){
+	var id = mongoose.Types.ObjectId(req.query.id);
+	User.findById(id,function(err,user){
+		if(err) throw err;
 		var following = [];
-		for (var i = 0; i < user.following.length; i++) {
-			following.push(user.following[i].name);
+		if(user){
+			for (var i = 0; i < user.following.length; i++) {
+				following.push(user.following[i].name);
+			}
 		}
 		res.send(following);
 	})
 });
 
 // Get a list of my followers
-router.get('/follower/:id',function(req,res){
+router.get('/follower',function(req,res){
 	console.log("Get request on follower");
-	User.findById(req.params.id,function(err,user){
+	var id = mongoose.Types.ObjectId(req.query.id);
+	User.findById(id,function(err,user){
+		if(err) throw err;
 		var follower = [];
-		for (var i = 0; i < user.follower.length; i++) {
-			follower.push(user.follower[i].name);
+		if(user){
+			for (var i = 0; i < user.follower.length; i++) {
+				follower.push(user.follower[i].name);
+			}
 		}
 		res.send(follower);
 	})

@@ -28,8 +28,14 @@ module.exports.getUserById = function (id , callback){
 }
 
 module.exports.comparePassword = function (candidatePassword , hash, callback){
-	bcrypt.compare(candidatePassword, hash, function(err, isMatch){
-		if(err) throw err;
-		callback(null,isMatch);
-	})
+	// Password match using Bcrypt
+	// bcrypt.compare(candidatePassword, hash, function(err, isMatch){
+	// 	if(err) throw err;
+	// 	callback(null,isMatch);
+	// })
+
+	//Normal matching
+	if(candidatePassword == hash){
+		callback(null,true);
+	}
 };
