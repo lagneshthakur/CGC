@@ -1,11 +1,16 @@
+<script type="text/javascript">
+
+</script>
 <h2 class="page-header">Search</h2>
-<form method="post" action="/user/search">
-  <div class="form-group">
-    <label>Email</label>
-    <input type="text" class="form-control" name="email" placeholder="Email">
-  </div>
-  <button type="submit" class="btn btn-default">Search</button>
-</form>
+<div class="container">
+  <form method="post" action="/user/search">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="text" class="form-control" name="email" placeholder="Email">
+    </div>
+    <button type="submit" class="btn btn-default">Search</button>
+  </form>
+</div>
 <br>
 {{#if search_user}}
 <div class="container">
@@ -33,7 +38,16 @@
                       </tr>                     
                     </tbody>
                   </table>
-                  <a href="#" class="btn btn-primary">Follow</a>
+                  <form method="post" action="/user/follow">
+                    <input type="hidden" name="id" value="{{user._id}}">
+                    <input type="hidden" name="user_id" value="{{search_user._id}}">
+                    <input type="submit" href="#" class="btn btn-primary" value="Follow">
+                  </form>
+                  <form method="post" action="/user/unfollow">
+                    <input type="hidden" name="id" value="{{user._id}}">
+                    <input type="hidden" name="user_id" value="{{search_user._id}}">
+                    <input type="submit" href="#" class="btn btn-primary" value="Unfollow">
+                  </form>
                   <!-- <a href="#" class="btn btn-primary">Team Sales Performance</a> -->
                 </div>
               </div>

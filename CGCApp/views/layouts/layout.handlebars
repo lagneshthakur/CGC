@@ -4,6 +4,18 @@
 	<title>CGC</title>
 	<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
+  <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+    var socket = io('http://localhost:3000/');
+    function sendMessage(){
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+    };
+    socket.on('broadcast message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+  </script>
 </head>
 <body>
 	<div class="container">
@@ -11,6 +23,30 @@
         <nav>
           <ul class="nav nav-pills pull-right">
             {{#if user}}
+            <div class="dropdown">
+              <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                <i class="glyphicon glyphicon-bell"></i>
+              </a>
+              
+              <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
+                
+                <div class="notification-heading"><h4 class="menu-title">Notifications</h4>
+                </div>
+                <li class="divider"></li>
+               <div class="notifications-wrapper">
+                 <a class="content" href="#">
+                  
+                   <div class="notification-item">
+                    <h4 class="item-title">Evaluation Deadline 1 · day ago</h4>
+                    <p class="item-info">Marketing 101, Video Assignment</p>
+                  </div>
+                   
+                </a>
+               </div>
+                <li class="divider"></li>
+                <div class="notification-footer"><h4 class="menu-title">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4></div>
+              </ul>
+            </div>
             <li role="presentation"><a href="/">Home</a></li>
             <li role="presentation"><a href="/user/search">Search</a></li>
             <li role="presentation"><a href="/user/logout">Logout</a></li>
@@ -22,6 +58,7 @@
           </ul>
         </nav>
         <h3 class="text-muted">CGC App</h3>
+
       </div>
 
       <div class="row">
@@ -48,6 +85,8 @@
   <script type="text/javascript" src="/js/jquery-2.2.4.js"></script>
   <script type="text/javascript" src="/js/jquery-ui.js"></script>
   <script type="text/javascript" src="/js/bootstrap.js"></script>
+  <!-- <script type="text/javascript" src="/js/angular.js"></script>  -->
+  <!-- <script type="text/javascript" src="/controllers/user.js"></script> -->
   <script type="text/javascript" src="/js/main.js"></script>
 
 </body>

@@ -86,6 +86,18 @@ var Post = require('./public/models/post.js');
 // Connect mongodb: Database-CGC
 mongoose.connect('mongodb://localhost:27017/CGC');
 
+//Socket IO
+io.on('connection', function(socket){
+  console.log('A user connected');
+  socket.on('chat message', function(msg){
+    console.log('message: ' + msg);
+    io.emit('broadcast message', msg);
+  });
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+
 // Get all users
 app.get('/users',function(req,res){
 	console.log("I received a get request");

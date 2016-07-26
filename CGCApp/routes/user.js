@@ -4,6 +4,10 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var User = require('../public/models/user.js');	
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+router.use(bodyParser.json()); // support json encoded bodies
+router.use(bodyParser.urlencoded({extended : false}));
 
 // Register A user
 router.get('/register',function(req,res){
@@ -39,11 +43,17 @@ router.post('/register',function(req,res){
 		});
 		User.createUser(newUser,function(err,user){
 			if(err)
-				throw err;
-			console.log(user);
+            {
+            	console.log(err);
+				req.flash('error_msg','You are already registered');
+				res.redirect('register');
+            }
+            else{
+            	console.log(user);
+				req.flash('success_msg','You are registered and can now login');
+				res.redirect('login');
+            }
 		});
-		req.flash('success_msg','You are registered and can now login');
-		res.redirect('login');
 	}
 });
 
@@ -113,7 +123,6 @@ router.post('/search',function(req,res){
   			res.redirect('/user/search');
   		}
   		else{
-  			var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   			date = new Date(user.dob);
 			dob = date.getFullYear()+'-' + (months[date.getMonth()]) + '-'+date.getDate();
   			req.flash('success_msg',"User Found");
@@ -127,7 +136,7 @@ router.post('/search',function(req,res){
 //Follow a user
 router.post('/follow',function(req,res){
 	console.log("I received a post request on follow");
-	console.log(req.body);
+	var user_follow = null;
 	// Add follower to the user who is to be followed by current user
 	User.findOne({ _id:req.body.id},function(err,doc){
 		User.update({_id: req.body.user_id}, {
@@ -140,6 +149,7 @@ router.post('/follow',function(req,res){
 	});
 	// Add following to the current user
 	User.findOne({ _id:req.body.user_id},function(err,doc){
+		user_follow = doc;
 		User.update({_id: req.body.id}, {
 		$addToSet: {
 			following: { _id : doc._id, name:{ first: doc.name.first , last: doc.name.last }} 
@@ -147,12 +157,20 @@ router.post('/follow',function(req,res){
 		}, function(err, affected, resp) {
 			if(affected.ok)
 			{
+		  			var date = new Date(user_follow.dob);
+					var dob = date.getFullYear()+'-' + (months[date.getMonth()]) + '-'+date.getDate();
 					if(affected.nModified)
 					{
-						res.send("Successfuly Followed!");
+			  			req.flash('success_msg',"Successfuly Followed!");
+  						res.locals.success_msg = req.flash('success_msg');
+  						res.render('search',{search_user:user_follow, dob: dob});
+						console.log("Successfuly Followed!");
 					}
 					else{
-						res.send("Already Followed!");
+						req.flash('error_msg',"Already Followed");
+  						res.locals.error_msg = req.flash('error_msg');
+  						res.render('search',{search_user:user_follow, dob: dob});
+						console.log("Already Followed!");
 					}
 			}
 		});
@@ -160,7 +178,8 @@ router.post('/follow',function(req,res){
 });
 
 //Unfollow a user
-router.delete('/follow',function(req,res){
+router.post('/unfollow',function(req,res){
+	var user_follow = null;
 	console.log("I received a delete request on follow");
 	// Remove from unfollowed user's followers list
 			User.update({_id: req.body.user_id}, {
@@ -171,18 +190,30 @@ router.delete('/follow',function(req,res){
 		});
 
 	// Remove from current user's following list
+		User.findOne({ _id:req.body.user_id},function(err,doc){
+			if(err) throw err;
+			user_follow = doc;
+		});
 		User.update({_id: req.body.id}, {
 		$pull: {
 			following: { _id : req.body.user_id}} 
 		}, function(err, affected, resp) {
 		   if(affected.ok)
 		   {
+	  			var date = new Date(user_follow.dob);
+				var dob = date.getFullYear()+'-' + (months[date.getMonth()]) + '-'+date.getDate();
 		   		if(affected.nModified)
 		   		{
-		   			res.send("Successfuly Unfollowed!");
+		   			req.flash('success_msg',"Successfuly Unfollowed!");
+					res.locals.success_msg = req.flash('success_msg');
+					res.render('search',{search_user:user_follow, dob: dob});
+					console.log("Successfuly Unfollowed!");
 		   		}
 		   		else{
-		   			res.send("Already not following!");
+					req.flash('error_msg',"Already not following");
+					res.locals.error_msg = req.flash('error_msg');
+					res.render('search',{search_user:user_follow, dob: dob});
+					console.log("Already not following!");
 		   		}
 		   }
 		})
