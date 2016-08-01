@@ -108,6 +108,11 @@ router.get('/logout',function(req,res){
 	res.redirect('/user/login');
 });
 
+// Return the logged in user
+router.post('/getCurrentUser',function(req,res){
+	res.send(req.user);
+});
+
 // Search for a user
 
 router.get('/search', ensureAuthenticated,function(req,res){
@@ -119,16 +124,18 @@ router.post('/search',function(req,res){
 	User.getUserByEmail(email, function(err,user){
   		if(err) throw err;
   		if(!user){
-  			req.flash('error_msg',"No user with that Email");
-  			res.redirect('/user/search');
+  			res.send("");
   		}
   		else{
   			date = new Date(user.dob);
 			dob = date.getFullYear()+'-' + (months[date.getMonth()]) + '-'+date.getDate();
-  			req.flash('success_msg',"User Found");
-  			res.locals.success_msg = req.flash('success_msg');
-  			res.render('search',{search_user:user, dob: dob});
-  		}
+  			res.setHeader('Content-Type', 'application/json');
+  			var json = JSON.stringify({
+			    user: user, 
+			    dob: dob
+			  });
+  			res.send(json);
+  			}
   	});
 
 });
@@ -144,9 +151,8 @@ router.post('/follow',function(req,res){
 			follower: { _id : doc._id, name:{ first: doc.name.first , last: doc.name.last }} 
 		}
 		},function(err,affected,resp){
-			console.log(affected);
+
 		});
-	});
 	// Add following to the current user
 	User.findOne({ _id:req.body.user_id},function(err,doc){
 		user_follow = doc;
@@ -155,30 +161,34 @@ router.post('/follow',function(req,res){
 			following: { _id : doc._id, name:{ first: doc.name.first , last: doc.name.last }} 
 		}
 		}, function(err, affected, resp) {
+			console.log(affected);
+			console.log(resp);
 			if(affected.ok)
 			{
 		  			var date = new Date(user_follow.dob);
 					var dob = date.getFullYear()+'-' + (months[date.getMonth()]) + '-'+date.getDate();
 					if(affected.nModified)
 					{
-			  			req.flash('success_msg',"Successfuly Followed!");
-  						res.locals.success_msg = req.flash('success_msg');
-  						res.render('search',{search_user:user_follow, dob: dob});
-						console.log("Successfuly Followed!");
-					}
+						// If follow successful
+			  			res.setHeader('Content-Type', 'application/json');
+			  			var json = JSON.stringify({ 
+						    user: user_follow, 
+						    dob: dob
+						  });
+			  			res.send(json);
+		  			}
 					else{
-						req.flash('error_msg',"Already Followed");
-  						res.locals.error_msg = req.flash('error_msg');
-  						res.render('search',{search_user:user_follow, dob: dob});
-						console.log("Already Followed!");
+						// If already following
+			  			res.send('');
 					}
 			}
 		});
 	});
+	});
 });
 
 //Unfollow a user
-router.post('/unfollow',function(req,res){
+router.delete('/follow',function(req,res){
 	var user_follow = null;
 	console.log("I received a delete request on follow");
 	// Remove from unfollowed user's followers list
@@ -202,18 +212,19 @@ router.post('/unfollow',function(req,res){
 		   {
 	  			var date = new Date(user_follow.dob);
 				var dob = date.getFullYear()+'-' + (months[date.getMonth()]) + '-'+date.getDate();
-		   		if(affected.nModified)
-		   		{
-		   			req.flash('success_msg',"Successfuly Unfollowed!");
-					res.locals.success_msg = req.flash('success_msg');
-					res.render('search',{search_user:user_follow, dob: dob});
-					console.log("Successfuly Unfollowed!");
-		   		}
+				if(affected.nModified)
+				{
+					// If unfollow successful
+		  			res.setHeader('Content-Type', 'application/json');
+		  			var json = JSON.stringify({ 
+					    user: user_follow, 
+					    dob: dob
+					  });
+		  			res.send(json);
+	  			}
 		   		else{
-					req.flash('error_msg',"Already not following");
-					res.locals.error_msg = req.flash('error_msg');
-					res.render('search',{search_user:user_follow, dob: dob});
-					console.log("Already not following!");
+		   			// If not following
+					res.send('');
 		   		}
 		   }
 		})

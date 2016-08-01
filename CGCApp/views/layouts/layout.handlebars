@@ -1,24 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="CGC">
 <head>
-	<title>CGC</title>
-	<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+  <title>CGC</title>
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
   <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script type="text/javascript">
-    var socket = io('http://localhost:3000/');
-    function sendMessage(){
-      socket.emit('chat message', $('#m').val());
-      $('#m').val('');
-      return false;
-    };
-    socket.on('broadcast message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-      });
-  </script>
+  <script type="text/javascript" src="/js/jquery-2.2.4.js"></script>
 </head>
-<body>
-	<div class="container">
+<body ng-cloak>
+  <div class="container" ng-controller="GlobalCtrl">
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
@@ -47,6 +37,7 @@
                 <div class="notification-footer"><h4 class="menu-title">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4></div>
               </ul>
             </div>
+            <li role="presentation"><a href="#">{{user.email}}</a></li>
             <li role="presentation"><a href="/">Home</a></li>
             <li role="presentation"><a href="/user/search">Search</a></li>
             <li role="presentation"><a href="/user/logout">Logout</a></li>
@@ -63,10 +54,11 @@
 
       <div class="row">
         <div class="col-lg-12">
+        <div ng-if="success_msg" class="alert alert-success" ng-cloak><span ng-bind="success_msg"></span></div>
         {{#if success_msg}}
           <div class="alert alert-success">{{success_msg}}</div>
         {{/if}}
-
+          <div ng-if="error_msg" class="alert alert-danger" ng-cloak><span ng-bind="error_msg"></span></div>
         {{#if error_msg}}
           <div class="alert alert-danger">{{error_msg}}</div>
         {{/if}}
@@ -82,11 +74,15 @@
         <p>&copy; 2016 CGC App</p>
       </footer>
     </div> <!-- /container -->
-  <script type="text/javascript" src="/js/jquery-2.2.4.js"></script>
   <script type="text/javascript" src="/js/jquery-ui.js"></script>
   <script type="text/javascript" src="/js/bootstrap.js"></script>
-  <!-- <script type="text/javascript" src="/js/angular.js"></script>  -->
-  <!-- <script type="text/javascript" src="/controllers/user.js"></script> -->
+  <script type="text/javascript" src="/js/angular.js"></script> 
+  <script type="text/javascript" src="/controllers/app.js"></script>
+  <script type="text/javascript" src="/controllers/global.js"></script>
+  <script type="text/javascript" src="/controllers/user_service.js"></script>
+  <script type="text/javascript" src="/controllers/socket_factory.js"></script>
+  <script type="text/javascript" src="/controllers/index.js"></script>
+  <script type="text/javascript" src="/controllers/user.js"></script>
   <script type="text/javascript" src="/js/main.js"></script>
 
 </body>

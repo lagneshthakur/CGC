@@ -24,7 +24,7 @@ app.use(express.static(__dirname + "/public"));
 
 // View Engine
 app.set('views',path.join(__dirname + '/views'));
-app.engine('handlebars',exphbs({defaultLayout:'layout'}));
+app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars');
 
 // Express Session
@@ -83,16 +83,40 @@ app.use('/post',post);
 var User = require('./public/models/user.js');
 var Post = require('./public/models/post.js');
 
+var socketUser = require('./public/models/socketUser');
+var connected_users = {};
 // Connect mongodb: Database-CGC
 mongoose.connect('mongodb://localhost:27017/CGC');
 
 //Socket IO
-io.on('connection', function(socket){
+io.sockets.on('connection', function(socket){
   console.log('A user connected');
-  socket.on('chat message', function(msg){
-    console.log('message: ' + msg);
-    io.emit('broadcast message', msg);
+  
+  socket.on('save user', function(email){
+    connected_users[email] = socket.id;
   });
+
+  socket.on('get all users', function(){
+    console.log(connected_users);
+  });
+
+  socket.on('chat message', function(data){
+    io.emit('broadcast message', data);
+  });
+
+  // Socket Definition for follow request
+  socket.on('follow', function(data){
+    var follower_email = data.follower_email;
+    var followee_email = data.followee_email;
+    var follower_socketid = connected_users[follower_email];
+    var followee_socketid = connected_users[followee_email];
+    console.log(follower_socketid + "ID");
+    console.log(followee_socketid);
+    console.log("\n ++++++++++++++++++ \n" + io.sockets.connected[followee_socketid]);
+    io.sockets.connected[follower_socketid].emit('followed',data);
+    io.sockets.connected[followee_socketid].emit('followed',data);
+  });
+
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
